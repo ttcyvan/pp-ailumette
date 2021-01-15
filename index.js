@@ -1,7 +1,5 @@
 const readlineSync = require('readline-sync');
 const fs = require("file-system");
-
-
 class Piramid{
      gameSave  ;
      maxValueY = 0;
@@ -54,7 +52,6 @@ class Piramid{
     testValid(nbDemise, y) {
 		let x = 0;
         let count = 0;
-        console.log(this.PositionXY["5:4"]);
 
 		while (x !== this.maxValueX) {
               
@@ -78,11 +75,20 @@ class Piramid{
 			}
 		});
 		return count;
-	}
+    }
+    
+    replay(){
+       while(this.maxValueX == 0 && this.maxValueY == 0){
+            if (this.PositionXY[`${x}:${y}`]['value'] == ''){
+                console.log("ok")
+            }
+       }
+
+    }
     
 }
 
-function player(piramid) {
+function jouer(piramid) {
 
     let line ;
     let valide;
@@ -90,17 +96,19 @@ function player(piramid) {
 	valide = readlineSync.question('matches : ');
 		
 	piramid.testValid(valide, line)
-	if (piramid.MatchesAll() == 0) {
-		log('You lost, too bad..')
-		Pirami.viewData()
+	if (piramid.MatchesAll() ===  0) {
+		console.log("fin tu as perdu")
+        piramid.viewData()
+        piramid.replay()
     }
+
+
     
 }
 
 function nbrPipe(piramid, y){ // value of position
     let x = 0;
     let count = 0;
-    console.log("te",);
 		while (x !== piramid.maxValueX) {   
 
                if (piramid.PositionXY[`${x}:${y}`]['value'] == '|') {
@@ -113,16 +121,17 @@ function nbrPipe(piramid, y){ // value of position
 }
 
 function IaDeFou(piramid){
-console.log('ia joue')
 let valueY = 0
-while(nbrPipe(piramid,valueY) > 0){
+while(nbrPipe(piramid,valueY) <= 0){
     valueY = Math.round(Math.random() * ((piramid.maxValueY - 2) - 1 + 1) + 1)
 }
 let valueX = 0
-while(valueX > 0){
-   valueX =  Math.floor(Math.random() * (nbrPipe(piramid,valueY) - 0 + 1) + 0)
+while(valueX <= 0){
+   valueX =  Math.round(Math.random() * (nbrPipe(piramid,valueY) - 0 + 1) + 0)
 }
 piramid.testValid(valueX,valueY)
+console.log('IA a jouer en x ;'+ valueX)
+console.log('IA a jouer en Y ;'+ valueY)
 }
 
 
@@ -133,7 +142,7 @@ let piramid = new Piramid;
     piramid.viewData()
 
     while(piramid.MatchesAll() !== 0){
-        player(piramid)
+        jouer(piramid)
         piramid.viewData()
         IaDeFou(piramid)
         piramid.viewData()
